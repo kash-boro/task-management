@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Task Management System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="login-wrapper">
+    <div class="login-box">
+        <h2>Task Manager Login</h2>
+
+        <!-- Spring Security appends ?error to the URL on a failed login -->
+        <div class="alert alert-error" th:if="${param.error}">
+            Invalid username or password.
+        </div>
+
+        <!-- Spring Security appends ?logout after a successful logout -->
+        <div class="alert alert-success" th:if="${param.logout}">
+            You have been logged out.
+        </div>
+
+        <!-- We append ?accountDeleted ourselves after self-account deletion -->
+        <div class="alert alert-success" th:if="${param.accountDeleted}">
+            Your account has been deleted.
+        </div>
+
+        <!-- We append ?registered ourselves after a successful sign-up -->
+        <div class="alert alert-success" th:if="${param.registered}">
+            Account created successfully. You can now log in.
+        </div>
+
+        <!-- Spring Security intercepts this POST to /login automatically --
+             we don't write a controller method to handle the submission.
+             Self-registered accounts log in with their EMAIL as the username. -->
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="username">Username / Email</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;">Login</button>
+        </form>
+
+        <p class="hint">
+            Don't have an account? <a th:href="@{/register}">Create one</a>
+        </p>
+
+        <p class="hint">
+            Demo accounts:<br>
+            admin / admin123 (ADMIN)<br>
+            user / user123 (USER)
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

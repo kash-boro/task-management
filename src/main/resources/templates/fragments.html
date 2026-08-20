@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<body>
+
+<!-- th:fragment marks a reusable block. Other templates pull this in with
+     th:replace="~{fragments :: navbar}" instead of duplicating the markup. -->
+<nav class="navbar" th:fragment="navbar">
+    <div>
+        <span class="brand">Task Manager</span>
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/tasks}">Tasks</a>
+        <a th:href="@{/profile}">Profile</a>
+        <!-- sec:authorize only renders this link for users with ROLE_ADMIN -->
+        <a th:href="@{/users}" sec:authorize="hasRole('ADMIN')">Manage Users</a>
+    </div>
+    <div class="right">
+        <button type="button" class="theme-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">&#127769;</button>
+        <span sec:authentication="name" style="margin:0 14px;"></span>
+        <form th:action="@{/logout}" method="post" style="margin:0;">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<footer class="footer" th:fragment="footer">
+    <p>Task Management System &copy; 2026</p>
+</footer>
+
+</body>
+</html>

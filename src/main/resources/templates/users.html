@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Users - Task Management System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/script.js}"></script>
+    <script>
+        (function () {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+</head>
+<body>
+
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="container">
+    <div class="page-header">
+        <h2>All Users (Admin Only)</h2>
+        <button type="button" class="btn btn-success" onclick="openModal('addUserModal')">+ Add User</button>
+    </div>
+
+    <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+    <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="u : ${users}">
+            <td th:text="${u.id}"></td>
+            <td th:text="${u.username}"></td>
+            <td th:text="${u.name} ?: '-'"></td>
+            <td th:text="${u.email} ?: '-'"></td>
+            <td th:text="${u.role}"></td>
+            <td>
+                <!-- sec:authentication="name" gives the currently logged-in
+                     username, so we can hide the Delete link on your own row
+                     (self-deletion happens from the Profile page instead). -->
+                <a th:if="${#authentication.name != u.username}"
+                   th:href="@{/users/delete/{id}(id=${u.id})}"
+                   class="btn btn-danger"
+                   onclick="return confirmDeleteUser()">Delete</a>
+                <span th:if="${#authentication.name == u.username}" style="color:#888;font-size:13px;">(you)</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:replace="~{fragments :: footer}"></div>
+
+<!-- ADD USER MODAL -->
+<div id="addUserModal" class="modal-overlay" th:classappend="${showAddUserModal} ? 'show'">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Add New User</h3>
+            <button type="button" class="modal-close" onclick="closeModal('addUserModal')">&times;</button>
+        </div>
+
+        <form th:action="@{/users/add}" th:object="${newUser}" method="post">
+            <div class="form-group">
+                <label for="newUsername">Username</label>
+                <input type="text" id="newUsername" th:field="*{username}">
+                <div class="error-text" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+            </div>
+            <div class="form-group">
+                <label for="newPassword2">Password</label>
+                <input type="password" id="newPassword2" th:field="*{password}">
+                <div class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            </div>
+            <div class="form-group">
+                <label for="newRole">Role</label>
+                <select id="newRole" th:field="*{role}">
+                    <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Create User</button>
+            <button type="button" class="btn" style="background:#bbb;color:#fff;" onclick="closeModal('addUserModal')">Cancel</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

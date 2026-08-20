@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile - Task Management System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/script.js}"></script>
+    <script>
+        (function () {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+</head>
+<body>
+
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="container">
+    <h2 style="margin-bottom:20px;">My Profile</h2>
+
+    <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+    <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+    <div class="form-box">
+        <div class="form-group" th:if="${name != null and !name.isBlank()}">
+            <label>Name</label>
+            <input type="text" th:value="${name}" disabled>
+        </div>
+        <div class="form-group" th:if="${email != null and !email.isBlank()}">
+            <label>Email</label>
+            <input type="text" th:value="${email}" disabled>
+        </div>
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" th:value="${username}" disabled>
+        </div>
+        <div class="form-group">
+            <label>Role</label>
+            <input type="text" th:value="${role}" disabled>
+        </div>
+    </div>
+
+    <h3 style="margin:30px 0 12px;">Change Password</h3>
+    <div class="form-box">
+        <form th:action="@{/profile/change-password}" method="post">
+            <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input type="password" id="currentPassword" name="currentPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" name="newPassword" required minlength="4">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm New Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required minlength="4">
+            </div>
+            <button type="submit" class="btn btn-primary">Change Password</button>
+        </form>
+    </div>
+
+    <h3 style="margin:30px 0 12px; color:#e74c3c;">Danger Zone</h3>
+    <div class="form-box" style="border:1px solid #e74c3c;">
+        <p style="margin-bottom:16px; color:#555;">
+            Deleting your account is permanent and cannot be undone. All of your tasks will be deleted too.
+        </p>
+        <form th:action="@{/profile/delete-account}" method="post" onsubmit="return confirmDeleteAccount()">
+            <button type="submit" class="btn btn-danger">Delete My Account</button>
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

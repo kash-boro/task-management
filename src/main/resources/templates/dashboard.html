@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Task Management System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/script.js}"></script>
+    <script>
+        // Apply saved dark-mode preference before the page paints, so there's no flash of light mode.
+        (function () {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+</head>
+<body>
+
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="container">
+    <h2>Welcome, <span th:text="${displayName}"></span></h2>
+    <p class="subtitle">Here's a summary of your tasks.</p>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-icon">&#128203;</div>
+            <h3 th:text="${totalTasks}"></h3>
+            <p>Total Tasks</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">&#9989;</div>
+            <h3 th:text="${completedTasks}"></h3>
+            <p>Completed Tasks</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">&#8987;</div>
+            <h3 th:text="${pendingTasks}"></h3>
+            <p>Pending Tasks</p>
+        </div>
+        <div class="stat-card stat-card-danger">
+            <div class="stat-icon">&#9888;&#65039;</div>
+            <h3 th:text="${overdueTasks}"></h3>
+            <p>Overdue Tasks</p>
+        </div>
+    </div>
+
+    <a th:href="@{/tasks}" class="btn btn-primary">View All Tasks</a>
+
+    <h3 style="margin:30px 0 12px;">Recent Tasks</h3>
+    <table>
+        <thead>
+        <tr><th>Title</th><th>Status</th><th>Priority</th><th>Due Date</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${recentTasks}">
+            <td th:text="${task.title}"></td>
+            <td>
+                <span class="status-badge" th:classappend="'status-' + ${task.status}"
+                      th:text="${taskService.statusEmoji(task.status)} + ' ' + ${task.status}"></span>
+                <span class="overdue-badge" th:if="${taskService.isOverdue(task)}">OVERDUE</span>
+            </td>
+            <td><span class="priority-badge" th:classappend="'priority-' + ${task.priority}" th:text="${task.priority}"></span></td>
+            <td th:text="${task.dueDate}"></td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(recentTasks)}">
+            <td colspan="4" style="text-align:center;color:#888;">No tasks yet.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:replace="~{fragments :: footer}"></div>
+
+</body>
+</html>

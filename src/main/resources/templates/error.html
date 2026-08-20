@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error - Task Management System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="login-wrapper">
+    <div class="login-box" style="width:400px; text-align:center;">
+        <h2 th:text="'Error ' + ${statusCode}"></h2>
+        <p style="margin:16px 0; color:#555;" th:text="${errorMessage}"></p>
+        <a th:href="@{/dashboard}" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+</div>
+
+</body>
+</html>
