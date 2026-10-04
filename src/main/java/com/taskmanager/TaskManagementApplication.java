@@ -16,9 +16,6 @@ public class TaskManagementApplication {
         SpringApplication.run(TaskManagementApplication.class, args);
     }
 
-    // Runs automatically once on startup. Seeds two demo accounts so you can
-    // log in immediately without building a registration page.
-    // ADMIN / admin123  and  USER / user123
     @Bean
     public CommandLineRunner seedUsers(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
